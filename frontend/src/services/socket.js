@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
+const SOCKET_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
 
 let socket = null;
 

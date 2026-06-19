@@ -8,7 +8,7 @@ import VideoPlayer from '../components/VideoPlayer';
 import CreateRoom from '../components/WatchParty/CreateRoom';
 import SyncIndicator from '../components/WatchParty/SyncIndicator';
 import { BsArrowLeft, BsInfoCircle } from 'react-icons/bs';
-const BACKEND_URL = import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
 
 export default function Watch() {
   const { mediaType, id, season, episode } = useParams();

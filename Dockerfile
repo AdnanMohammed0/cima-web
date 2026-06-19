@@ -2,12 +2,12 @@ FROM mcr.microsoft.com/playwright:v1.44.0-jammy
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY backend/package*.json ./
 RUN npm install
 
-COPY . .
+COPY backend/ .
 
 EXPOSE 7860
 ENV PORT=7860
 
-CMD ["node", "server.js"]
+CMD ["node", "index.js"]

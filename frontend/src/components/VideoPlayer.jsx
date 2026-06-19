@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import Hls from 'hls.js';
 import useStore from '../store/store';
-const BACKEND_URL = import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
 
 export default function VideoPlayer({
   mediaId, mediaType = 'movie', season, episode,

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../store/store';
 import { BsPeople, BsLink45Deg, BsPlus } from 'react-icons/bs';
-const BACKEND_URL = import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
 
 export default function CreateRoom({ mediaId, mediaType, title }) {
   const [showModal, setShowModal] = useState(false);

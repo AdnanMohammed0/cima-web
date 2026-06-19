@@ -83,7 +83,7 @@ const useStore = create((set, get) => ({
     const state = get();
     if (state.streamCache[key]) return state.streamCache[key];
     try {
-const BACKEND_URL = import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
       const params = new URLSearchParams({ tmdb_id: tmdbId, type });
       if (season) params.set('season', season);
       if (episode) params.set('episode', episode);

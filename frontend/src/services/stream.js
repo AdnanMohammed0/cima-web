@@ -1,4 +1,4 @@
-const BACKEND_URL = import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOCKET_URL || 'https://adnanmohammed-cima-back.hf.space';
 
 async function fetchStream(tmdbId, type = 'movie', season = null, episode = null, provider = null) {
   const params = new URLSearchParams({ tmdb_id: tmdbId, type });
