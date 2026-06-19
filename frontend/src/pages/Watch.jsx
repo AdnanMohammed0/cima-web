@@ -43,7 +43,7 @@ export default function Watch() {
     const cached = getCachedStream(cacheKey);
     if (cached && cached.playlistUrl) {
       sessionIdRef.current = cached.sessionId;
-      setStreamUrl(cached.playlistUrl);
+      setStreamUrl(BACKEND_URL + cached.playlistUrl);
       setStreamLoading(false);
       saveStreamSession(cacheKey, cached.sessionId, cached.playlistUrl);
       return;
@@ -56,7 +56,7 @@ export default function Watch() {
         .then(r => {
           if (r.ok) {
             sessionIdRef.current = saved.sessionId;
-            setStreamUrl(saved.playlistUrl);
+            setStreamUrl(BACKEND_URL + saved.playlistUrl);
             setStreamLoading(false);
             cacheStream(cacheKey, { sessionId: saved.sessionId, playlistUrl: saved.playlistUrl });
             return;
@@ -82,7 +82,7 @@ export default function Watch() {
       .then((data) => {
         if (loadIdRef.current === loadId) {
           sessionIdRef.current = data.sessionId;
-          setStreamUrl(data.playlistUrl);
+          setStreamUrl(BACKEND_URL + data.playlistUrl);
           setStreamLoading(false);
           cacheStream(cacheKey, data);
           saveStreamSession(cacheKey, data.sessionId, data.playlistUrl);

@@ -39,6 +39,7 @@ function App() {
         }
       } catch (err) {
         console.error('Failed to load TMDB data:', err);
+        setError(error.message);
       }
     };
     loadData();
