@@ -1,22 +1,10 @@
 const express = require('express');
-const { chromium } = require('playwright');
 const router = express.Router();
 const store = require('../services/sessionStore');
+const { getBrowser } = require('../services/browserPool');
 
-let browser;
 const pagePool = new Map();
 const POOL_MAX_AGE = 10 * 60 * 1000;
-
-async function getBrowser() {
-  if (!browser || !browser.isConnected()) {
-    if (browser) await browser.close().catch(() => {});
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-    });
-  }
-  return browser;
-}
 
 async function fetchViaBrowser(page, url) {
   return await page.evaluate(async (fetchUrl) => {
@@ -178,7 +166,6 @@ async function shutdown() {
     await entry.ctx.close().catch(() => {});
   }
   pagePool.clear();
-  if (browser) await browser.close().catch(() => {});
 }
 
 module.exports = router;

@@ -1,28 +1,8 @@
-const { chromium } = require('playwright');
+const { getBrowser } = require('./browserPool');
 
-let browser;
 let activePages = 0;
 const MAX_PAGES = 3;
 const queue = [];
-let browserPromise = null;
-
-async function getBrowser() {
-  if (browser && browser.isConnected()) return browser;
-  if (browserPromise) return browserPromise;
-  browserPromise = (async () => {
-    try {
-      if (browser) await browser.close().catch(() => {});
-      browser = await chromium.launch({
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-      });
-      return browser;
-    } finally {
-      browserPromise = null;
-    }
-  })();
-  return browserPromise;
-}
 
 const SOURCES = [
   {
@@ -145,21 +125,11 @@ async function findStreamSession(tmdbId, type = 'movie', season = null, episode 
 }
 
 async function warmupBrowser() {
-  try {
-    const b = await getBrowser();
-    const ctx = await b.newContext();
-    const page = await ctx.newPage();
-    await page.goto('about:blank');
-    await page.close();
-    await ctx.close();
-    console.log('[scraper] Browser warmed up');
-  } catch (err) {
-    console.error('[scraper] Browser warmup failed:', err.message);
-  }
+  await require('./browserPool').warmup();
 }
 
 async function shutdown() {
-  if (browser) { await browser.close().catch(() => {}); browser = null; }
+  await require('./browserPool').shutdown();
 }
 process.on('SIGTERM', shutdown);
 process.on('SIGINT', shutdown);
