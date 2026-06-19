@@ -26,7 +26,7 @@ app.use(express.json());
 const streamRoutes = require('./routes/stream');
 const proxyRoutes = require('./routes/proxy');
 const { cleanupAll } = require('./services/sessionStore');
-const { shutdown: scraperShutdown } = require('./services/scraper');
+const { shutdown: scraperShutdown, warmupBrowser } = require('./services/scraper');
 
 app.use('/api/stream', streamRoutes);
 app.use('/api/proxy', proxyRoutes);
@@ -260,4 +260,5 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT} (network accessible)`);
+  warmupBrowser();
 });

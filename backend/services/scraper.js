@@ -29,19 +29,25 @@ async function acquirePage() {
     let resolved = false;
     await Promise.race([
       new Promise((r) => queue.push(r)),
-      new Promise((_, reject) => setTimeout(() => { if (!resolved) reject(new Error('Page queue timeout')); }, 30000)),
+      new Promise((_, reject) => setTimeout(() => { if (!resolved) reject(new Error('Page queue timeout')); }, 60000)),
     ]);
     resolved = true;
   }
   activePages++;
-  const b = await getBrowser();
-  const ctx = await b.newContext({
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
-    viewport: { width: 1920, height: 1080 },
-    locale: 'en-US',
-  });
-  const page = await ctx.newPage();
-  return { page, ctx };
+  try {
+    const b = await getBrowser();
+    const ctx = await b.newContext({
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36',
+      viewport: { width: 1920, height: 1080 },
+      locale: 'en-US',
+    });
+    const page = await ctx.newPage();
+    return { page, ctx };
+  } catch (err) {
+    activePages--;
+    if (queue.length) queue.shift()();
+    throw err;
+  }
 }
 
 function releasePage({ page, ctx }) {
@@ -130,6 +136,20 @@ async function findStreamSession(tmdbId, type = 'movie', season = null, episode 
   }
 }
 
+async function warmupBrowser() {
+  try {
+    const b = await getBrowser();
+    const ctx = await b.newContext();
+    const page = await ctx.newPage();
+    await page.goto('about:blank');
+    await page.close();
+    await ctx.close();
+    console.log('[scraper] Browser warmed up');
+  } catch (err) {
+    console.error('[scraper] Browser warmup failed:', err.message);
+  }
+}
+
 async function shutdown() {
   if (browser) { await browser.close().catch(() => {}); browser = null; }
 }
@@ -140,4 +160,4 @@ function getAvailableProviders() {
   return SOURCES.map(s => s.name);
 }
 
-module.exports = { findStreamSession, releasePage, shutdown, getAvailableProviders };
+module.exports = { findStreamSession, releasePage, shutdown, warmupBrowser, getAvailableProviders };
