@@ -7,7 +7,7 @@ async function launchBrowser() {
   const launchTimeout = 45000;
   const launchPromise = chromium.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--single-process'],
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
   });
   const timeoutPromise = new Promise((_, reject) =>
     setTimeout(() => reject(new Error('Browser launch timed out')), launchTimeout)
@@ -32,12 +32,7 @@ async function getBrowser() {
 
 async function warmup() {
   try {
-    const b = await getBrowser();
-    const ctx = await b.newContext();
-    const page = await ctx.newPage();
-    await page.goto('about:blank');
-    await page.close();
-    await ctx.close();
+    await getBrowser();
     console.log('[browser] Warmed up');
   } catch (err) {
     console.error('[browser] Warmup failed:', err.message);
