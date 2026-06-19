@@ -87,7 +87,10 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || import.meta.env.VITE_SOC
       const params = new URLSearchParams({ tmdb_id: tmdbId, type });
       if (season) params.set('season', season);
       if (episode) params.set('episode', episode);
-      const res = await fetch(`${BACKEND_URL}/api/stream?${params}`, { signal: AbortSignal.timeout(30000) });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000);
+      const res = await fetch(`${BACKEND_URL}/api/stream?${params}`, { signal: controller.signal });
+      clearTimeout(timeoutId);
       if (!res.ok) return null;
       const data = await res.json();
       set((s) => ({ streamCache: { ...s.streamCache, [key]: data } }));
