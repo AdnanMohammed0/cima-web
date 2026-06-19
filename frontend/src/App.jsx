@@ -17,7 +17,7 @@ import PartyHub from './pages/PartyHub';
 const keyMissing = !import.meta.env.VITE_TMDB_API_KEY || import.meta.env.VITE_TMDB_API_KEY === 'your_tmdb_api_key_here';
 
 function App() {
-  const { setFeatured, setPopular, setTopRated, setTrending } = useStore();
+  const { setFeatured, setPopular, setTopRated, setTrending, setPopularTv } = useStore();
 
   useEffect(() => {
     const loadData = async () => {
@@ -35,11 +35,10 @@ function App() {
         setTrending(trendingData);
         // Store popular TV in a separate key or merge into trending
         if (popularTvData.length > 0) {
-          set((s) => ({ popularTv: popularTvData }));
+          setPopularTv(popularTvData);
         }
       } catch (err) {
         console.error('Failed to load TMDB data:', err);
-        setError(error.message);
       }
     };
     loadData();

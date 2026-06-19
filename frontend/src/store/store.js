@@ -56,6 +56,7 @@ const useStore = create((set, get) => ({
   setPopular: (popular) => set({ popular }),
   setTopRated: (topRated) => set({ topRated }),
   setTrending: (trending) => set({ trending }),
+  setPopularTv: (popularTv) => set({ popularTv }),
 
   setSelectedMedia: (selectedMedia) => set({ selectedMedia }),
 
