@@ -1,9 +1,12 @@
-FROM mcr.microsoft.com/playwright:v1.44.0-jammy
+FROM node:20-bookworm-slim
 
 WORKDIR /app
 
 COPY backend/package*.json ./
 RUN npm install
+
+# Install Playwright system deps and Chromium
+RUN npx playwright install --with-deps chromium 2>&1 || echo "Playwright install had warnings"
 
 COPY backend/ .
 

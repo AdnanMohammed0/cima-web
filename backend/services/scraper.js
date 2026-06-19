@@ -4,16 +4,24 @@ let browser;
 let activePages = 0;
 const MAX_PAGES = 3;
 const queue = [];
+let browserPromise = null;
 
 async function getBrowser() {
-  if (!browser || !browser.isConnected()) {
-    if (browser) await browser.close().catch(() => {});
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
-    });
-  }
-  return browser;
+  if (browser && browser.isConnected()) return browser;
+  if (browserPromise) return browserPromise;
+  browserPromise = (async () => {
+    try {
+      if (browser) await browser.close().catch(() => {});
+      browser = await chromium.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+      });
+      return browser;
+    } finally {
+      browserPromise = null;
+    }
+  })();
+  return browserPromise;
 }
 
 const SOURCES = [
